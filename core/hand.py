@@ -20,6 +20,9 @@ class Hand:
                 self.hand_value -= 10
                 self.num_aces -= 1
 
+    def clear_hand(self):
+         self.hand_cards.clear()
+
 
 
 

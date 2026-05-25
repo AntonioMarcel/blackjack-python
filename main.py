@@ -1,7 +1,4 @@
-from core import Deck, Hand
+from core import Game
 
-deck = Deck()
-hand = Hand()
-
-card = deck.deal()
-hand.add_card(card)
+g = Game()
+g.play_game()
