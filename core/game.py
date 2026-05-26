@@ -46,6 +46,26 @@ class Game:
             return True
         
         return False
+    
+    def hit_or_stand(self):
+        while True:
+            choice = input("Deseja comprar uma carta ou parar? H/S").upper()
+
+            if choice == "H":
+                self.player_hand.add_card(self.deck.deal())
+                print(self.player_hand.hand_cards)
+                print(self.player_hand.hand_value)
+
+                if self.player_hand.hand_value > 21:
+                    print("BUST! Hand value greater than 21.")
+                    break
+
+            elif choice == "S":
+                print("You chose to keep your cards.")
+                break
+
+            else: 
+                print("Comando inválido")
 
     def play_game(self):
         while True:
@@ -67,11 +87,16 @@ class Game:
                 print("No more chips!")
                 break
 
-            one_more = input(f"Seu saldo é {self.player_chips.total}. Deseja jogar mais uma rodada? S/N").upper()
+            while True:
+                keep_playing = input(f"Seu saldo é {self.player_chips.total}. Deseja jogar mais uma rodada? S/N").upper()
 
-            if one_more == "N":
-                break
-                    
+                if keep_playing == "S":
+                    break
+                elif keep_playing == "N":
+                    print("Thank you for playing!")
+                    return 
+                else:
+                    print("Invalid input!")
 
  
 
