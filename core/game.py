@@ -31,8 +31,6 @@ class Game:
             self.dealer_hand.add_card(self.deck.deal())
 
     def check_natural_blackjack(self):
-        self.player_hand.hand_value = 21
-        self.dealer_hand.hand_value = 21
         if self.player_hand.hand_value == self.dealer_hand.hand_value == 21:
             print("Push! Natural Blackjack for both.")
             return True
@@ -49,7 +47,7 @@ class Game:
     
     def hit_or_stand(self):
         while True:
-            choice = input("Deseja comprar uma carta ou parar? H/S").upper()
+            choice = input("Deseja comprar uma carta ou parar? [H/S] ").upper()
 
             if choice == "H":
                 self.player_hand.add_card(self.deck.deal())
@@ -58,14 +56,41 @@ class Game:
 
                 if self.player_hand.hand_value > 21:
                     print("BUST! Hand value greater than 21.")
-                    break
+                    self.player_chips.lose_bet()
+                    return False
 
             elif choice == "S":
                 print("You chose to keep your cards.")
-                break
+                return True
 
             else: 
                 print("Comando inválido")
+
+    def dealer_turn(self):
+        while self.dealer_hand.hand_value < 17:
+            self.dealer_hand.add_card(self.deck.deal())
+            print(self.dealer_hand.hand_cards)
+            print(self.dealer_hand.hand_value)
+
+        if self.dealer_hand.hand_value > 21:
+            print("Dealer BUST! Player wins.")
+            self.player_chips.win_bet()
+            return False
+        
+        return True
+            
+    def compare_hands(self):
+        if self.player_hand.hand_value > self.dealer_hand.hand_value:
+            print("Player wins! Higher hand value.")
+            self.player_chips.win_bet()
+            return True
+        elif self.player_hand.hand_value < self.dealer_hand.hand_value:
+            print("Player loses! Dealer with higher hand value.")
+            self.player_chips.lose_bet()
+            return False
+        else: 
+            print("Push! Same hand value for both.")
+            return 
 
     def play_game(self):
         while True:
@@ -79,16 +104,21 @@ class Game:
             if not natural_blackjack:
                 # Próximos passos    
                 ## Aqui entrará o loop de Hit or Stand do Jogador.
-                ## Aqui entrará o loop do Dealer (se o jogador não estourar).
-                ## Aqui entrará a comparação final de quem ganhou.
-                pass
+                player_survived = self.hit_or_stand()
+                
+                if player_survived:
+                    ## Aqui entrará o loop do Dealer (se o jogador não estourar).
+                    dealer_survived = self.dealer_turn()
+                    if dealer_survived:
+                        ## Aqui entrará a comparação final de quem ganhou.
+                        self.compare_hands()
 
             if self.player_chips.total <= 0:
                 print("No more chips!")
                 break
 
             while True:
-                keep_playing = input(f"Seu saldo é {self.player_chips.total}. Deseja jogar mais uma rodada? S/N").upper()
+                keep_playing = input(f"Seu saldo é {self.player_chips.total}. Deseja jogar mais uma rodada? [S/N] ").upper()
 
                 if keep_playing == "S":
                     break
