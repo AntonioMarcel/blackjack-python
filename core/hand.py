@@ -22,6 +22,16 @@ class Hand:
 
     def clear_hand(self):
          self.hand_cards.clear()
+         self.hand_value = 0
+         self.num_aces = 0
+
+    def __str__(self):
+        txt = f"Valor total: {self.hand_value}\nCartas:"
+
+        for card in self.hand_cards:
+             txt += f"\n - {card}"
+
+        return txt
 
 
 
